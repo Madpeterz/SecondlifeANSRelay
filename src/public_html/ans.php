@@ -9,7 +9,7 @@ use GuzzleHttp\Psr7\Request;
 
 @ini_set('display_errors', "0");
 @ini_set('log_errors', "1");
-@ini_set('error_log', '/proc/self/fd/2');
+@ini_set('error_log', '/dev/null');
 
 
 $relayTargets = [];
