@@ -9,13 +9,8 @@ use GuzzleHttp\Psr7\Request;
 
 @ini_set('display_errors', "0");
 @ini_set('log_errors', "1");
+@ini_set('error_log', '/proc/self/fd/2');
 
-function e_log(string $message): void
-{
-    error_log('A: ' . $message, 3, '/proc/self/fd/2');
-    error_log('B: ' . $message, 3, 'php://stdout');
-    error_log('C: ' . $message, 3, '/dev/stderr');
-}
 
 $relayTargets = [];
 $ansSalt = "notLoaded";
@@ -30,36 +25,36 @@ foreach (getenv() as $key => $value) {
 
 if (count($relayTargets) == 0) {
     http_response_code(501);
-    e_log('no relay targets loaded');
+    error_log('no relay targets loaded');
     die("Not accepted here"); // no relays are setup
 }
 
 if ($ansSalt == "notLoaded") {
     http_response_code(501);
-    e_log('ANS salt not loaded');
+    error_log('ANS salt not loaded');
     die("Not accepted here"); // ENV for ANS salt not setup
 }
 
 if (array_key_exists("HTTP_X_ANS_VERIFY_HASH", $_SERVER) == false) {
     http_response_code(501);
-    e_log('HTTP_X_ANS_VERIFY_HASH is missing');
+    error_log('HTTP_X_ANS_VERIFY_HASH is missing');
     die("Not accepted here"); // HTTP_X_ANS_VERIFY_HASH is missing
 }
 $checkHash = $_SERVER['HTTP_X_ANS_VERIFY_HASH'];
 if ($checkHash == null) {
     http_response_code(501);
-    e_log('HTTP_X_ANS_VERIFY_HASH is empty');
+    error_log('HTTP_X_ANS_VERIFY_HASH is empty');
     die("Not accepted here"); // HTTP_X_ANS_VERIFY_HASH is empty
 }
 if (array_key_exists("QUERY_STRING", $_SERVER) == false) {
     http_response_code(501);
-    e_log('QUERY_STRING is missing');
+    error_log('QUERY_STRING is missing');
     die("Not accepted here"); // QUERY_STRING is missing
 }
 $vaildateHash = sha1($_SERVER['QUERY_STRING'] . $ansSalt);
 if ($checkHash != $vaildateHash) {
     http_response_code(501);
-    e_log('hash checks failed');
+    error_log('hash checks failed');
     die("Not accepted here"); // did not pass checks on the source
 }
 
@@ -74,12 +69,12 @@ $client = new Client(['handler' => $handle]);
 $headers = ['HTTP_X_ANS_VERIFY_HASH' => $_SERVER['HTTP_X_ANS_VERIFY_HASH']];
 foreach ($relayTargets as $relay) {
     try {
-        e_log("sending to " . $url);
+        error_log("sending to " . $url);
         $relayUri = $url . "?" . $_SERVER['QUERY_STRING'];
         $request = new Request("GET", $relayUri, $headers, "");
         $promises[] = $client->getAsync($request);
     } catch (Exception $e) {
-        e_log("Failed to write to a relay target " . $relay . " because: " . $e->getMessage());
+        error_log("Failed to write to a relay target " . $relay . " because: " . $e->getMessage());
     }
 }
 
@@ -95,7 +90,7 @@ $last = microtime(true);
 while ($done < $waiting) {
     $now = microtime(true);
     $delta = round(($now - $last) * 1000);
-    e_log("tick(" . $delta . ")");
+    error_log("tick(" . $delta . ")");
     $last = $now;
     $handler->tick();
 }
