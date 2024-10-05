@@ -7,9 +7,9 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\CurlMultiHandler;
 use GuzzleHttp\Psr7\Request;
 
-@ini_set('display_errors', "0");
-@ini_set('log_errors', "1");
-@ini_set('error_log', '/dev/null');
+@ini_set('display_errors', "off");
+@ini_set('log_errors', "on");
+@ini_set('error_log', '/proc/self/fd/2');
 
 
 $relayTargets = [];
