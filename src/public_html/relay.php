@@ -12,8 +12,8 @@ $client = new Client();
 $headers = ['HTTP_X_ANS_VERIFY_HASH' => $_SERVER['HTTP_X_ANS_VERIFY_HASH']];
 foreach ($relayTargets as $relay) {
     try {
-        error_log("sending to " . $url);
-        $relayUri = $url . "?" . $_SERVER['QUERY_STRING'];
+        error_log("sending to " . $relay);
+        $relayUri = $relay . "?" . $_SERVER['QUERY_STRING'];
         $request = new Request("GET", $relayUri, $headers, "");
         $promises[] = $client->getAsync($request);
     } catch (Exception $e) {
