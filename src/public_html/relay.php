@@ -9,7 +9,6 @@ $connections = [];
 foreach ($relayTargets as $relay) {
     try {
         $relayUri = $relay . "?" . $_SERVER['QUERY_STRING'];
-        $connectionid++;
         $connection = curl_init();
         curl_setopt($connection, CURLOPT_URL, $relayUri);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
