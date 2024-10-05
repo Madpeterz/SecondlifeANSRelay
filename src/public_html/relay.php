@@ -11,7 +11,7 @@ foreach ($relayTargets as $relay) {
         $relayUri = $relay . "?" . $_SERVER['QUERY_STRING'];
         $connection = curl_init();
         curl_setopt($connection, CURLOPT_URL, $relayUri);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        curl_setopt($connection, CURLOPT_HTTPHEADER, [
             'HTTP_X_ANS_VERIFY_HASH: ' . $_SERVER['HTTP_X_ANS_VERIFY_HASH'] . '',
         ]);
         $connections[] = $connection;
