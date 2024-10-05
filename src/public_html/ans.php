@@ -4,7 +4,6 @@ namespace App;
 
 use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Handler\CurlMultiHandler;
 use GuzzleHttp\Psr7\Request;
 
 @ini_set('display_errors', "off");
@@ -64,8 +63,7 @@ print "ok";
 
 // send the ANS reply to the other targets
 $promises = [];
-$handler = new CurlMultiHandler();
-$client = new Client(['handler' => $handle]);
+$client = new Client();
 $headers = ['HTTP_X_ANS_VERIFY_HASH' => $_SERVER['HTTP_X_ANS_VERIFY_HASH']];
 foreach ($relayTargets as $relay) {
     try {
