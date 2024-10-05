@@ -6,14 +6,15 @@ use Exception;
 
 // send the ANS reply to the other targets
 $connections = [];
+$headers = ['HTTP_X_ANS_VERIFY_HASH: ' . $_SERVER['HTTP_X_ANS_VERIFY_HASH']];
+error_log("headers are: " . json_encode($headers));
 foreach ($relayTargets as $relay) {
     try {
         $relayUri = $relay . "?" . $_SERVER['QUERY_STRING'];
         $connection = curl_init();
         curl_setopt($connection, CURLOPT_URL, $relayUri);
-        curl_setopt($connection, CURLOPT_HTTPHEADER, [
-            'HTTP_X_ANS_VERIFY_HASH: ' . $_SERVER['HTTP_X_ANS_VERIFY_HASH'] . '',
-        ]);
+        curl_setopt($connection, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($connection, CURLOPT_RETURNTRANSFER, false);
         $connections[] = $connection;
         error_log("setting up curl channel for: " . $relayUri);
     } catch (Exception $e) {
