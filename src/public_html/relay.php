@@ -17,7 +17,7 @@ foreach ($relayTargets as $relay) {
         curl_setopt($connection, CURLOPT_HTTPHEADER, [
             "HTTP_X_ANS_VERIFY_HASH: " . $_SERVER['HTTP_X_ANS_VERIFY_HASH'],
         ]);
-        curl_setopt($connection, CURLOPT_RETURNTRANSFER, false);
+        curl_setopt($connection, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($connection, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($connection, CURLINFO_HEADER_OUT, true);
         $connections[] = $connection;
@@ -40,7 +40,7 @@ do {
 } while ($active && $status == CURLM_OK);
 error_log("shutting down");
 foreach ($connections as $curlClient) {
-    error_log("info: " . curl_getinfo($curlClient, CURLINFO_HEADER_OUT));
+    error_log("info: " . curl_multi_getcontent($curlClient));
     curl_multi_remove_handle($mh, $curlClient);
 }
 curl_multi_close($mh);
