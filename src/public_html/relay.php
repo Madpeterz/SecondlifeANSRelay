@@ -12,7 +12,9 @@ foreach ($relayTargets as $relay) {
     try {
         $relayUri = $relay . "?" . $_SERVER['QUERY_STRING'];
         $connection = curl_init();
+        curl_setopt($connection, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($connection, CURLOPT_URL, $relayUri);
+        curl_setopt($connection, CURLOPT_HEADER, true);
         curl_setopt($connection, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($connection, CURLOPT_RETURNTRANSFER, false);
         $connections[] = $connection;
