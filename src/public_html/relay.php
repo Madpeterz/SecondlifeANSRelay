@@ -40,6 +40,7 @@ do {
 } while ($active && $status == CURLM_OK);
 error_log("shutting down");
 foreach ($connections as $curlClient) {
+    error_log("headers: " . curl_getinfo($curlClient, CURLINFO_HEADER_OUT));
     error_log("info: " . curl_multi_getcontent($curlClient));
     curl_multi_remove_handle($mh, $curlClient);
 }
