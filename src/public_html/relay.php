@@ -6,8 +6,6 @@ use Exception;
 
 // send the ANS reply to the other targets
 $connections = [];
-$headers = ['HTTP_X_ANS_VERIFY_HASH: ' . $_SERVER['HTTP_X_ANS_VERIFY_HASH']];
-error_log("headers are: " . json_encode($headers));
 foreach ($relayTargets as $relay) {
     try {
         $relayUri = $relay . "?" . $_SERVER['QUERY_STRING'];
@@ -15,9 +13,12 @@ foreach ($relayTargets as $relay) {
         curl_setopt($connection, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($connection, CURLOPT_URL, $relayUri);
         curl_setopt($connection, CURLOPT_HEADER, true);
-        curl_setopt($connection, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($connection, CURLOPT_HTTPHEADER, [
+            "HTTP_X_ANS_VERIFY_HASH: " . $_SERVER['HTTP_X_ANS_VERIFY_HASH'],
+        ]);
         curl_setopt($connection, CURLOPT_RETURNTRANSFER, false);
         curl_setopt($connection, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($connection, CURLINFO_HEADER_OUT, true);
         $connections[] = $connection;
         error_log("setting up curl channel for: " . $relayUri);
     } catch (Exception $e) {
@@ -38,6 +39,7 @@ do {
 } while ($active && $status == CURLM_OK);
 error_log("shutting down");
 foreach ($connections as $curlClient) {
+    error_log("info: " . curl_getinfo($curlClient, CURLINFO_HEADER_OUT));
     curl_multi_remove_handle($mh, $curlClient);
 }
 curl_multi_close($mh);
