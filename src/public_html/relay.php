@@ -14,9 +14,9 @@ foreach ($relayTargets as $relay) {
         curl_setopt($connection, CURLOPT_URL, $relayUri);
         curl_setopt($connection, CURLOPT_HEADER, true);
         curl_setopt($connection, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($connection, CURLOPT_HTTPHEADER, [
+        curl_setopt($connection, CURLOPT_HTTPHEADER, implode("\n", [
             "HTTP_X_ANS_VERIFY_HASH: " . $_SERVER['HTTP_X_ANS_VERIFY_HASH'],
-        ]);
+        ]));
         curl_setopt($connection, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($connection, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($connection, CURLINFO_HEADER_OUT, true);
