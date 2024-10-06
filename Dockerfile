@@ -11,4 +11,5 @@ RUN apt-get update \
     && apt-get clean
 
 ENV AnsSalt='notLoaded' \
-    AnsRelay_1='https://google.com'
+    AnsRelay_1='https://google.com' \
+    debugAns='false'
