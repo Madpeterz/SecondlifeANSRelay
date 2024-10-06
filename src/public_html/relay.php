@@ -17,6 +17,7 @@ foreach ($relayTargets as $relay) {
         curl_setopt($connection, CURLOPT_HEADER, true);
         curl_setopt($connection, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($connection, CURLOPT_RETURNTRANSFER, false);
+        curl_setopt($curl_handle, CURLOPT_FOLLOWLOCATION, true);
         $connections[] = $connection;
         error_log("setting up curl channel for: " . $relayUri);
     } catch (Exception $e) {
